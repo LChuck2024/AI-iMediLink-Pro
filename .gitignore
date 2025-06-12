@@ -1,0 +1,38 @@
+# Python缓存文件
+__pycache__/
+*.py[cod]
+*$py.class
+
+# 虚拟环境
+venv/
+env/
+.env
+
+# IDE文件
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# 系统文件
+.DS_Store
+Thumbs.db
+
+# 临时文件
+*.tmp
+*.temp
+
+
+# 配置文件中的敏感信息
+config.json
+*.key
+*.pem
+
+# Jupyter Notebook检查点
+.ipynb_checkpoints/
+
+# 模型文件（如果很大的话）
+*.pt
+*.pth
+*.h5
+*.pkl
