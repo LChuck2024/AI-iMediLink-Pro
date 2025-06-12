@@ -300,8 +300,8 @@ with st.container():
             st.success(f"欢迎回来，{user_info['username']}！")
             remaining_time = session_manager.get_remaining_time()
 
-            if remaining_time > 0:
-                st.info(f"自动登录剩余时间：{remaining_time} 分钟")
+            # if remaining_time > 0:
+            #     st.info(f"自动登录剩余时间：{remaining_time} 分钟")
         with col2:
             if st.button("登出", key="logout_btn"):
                 session_manager.logout()

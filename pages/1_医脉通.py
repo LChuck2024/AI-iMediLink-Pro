@@ -118,8 +118,8 @@ if not is_logged_in:
 
 # 显示登录状态信息
 remaining_time = session_manager.get_remaining_time()
-if remaining_time > 0:
-    st.info(f"🔄 自动登录剩余时间: {remaining_time} 分钟")
+# if remaining_time > 0:
+#     st.info(f"🔄 自动登录剩余时间: {remaining_time} 分钟")
 
 # 显示欢迎信息
 if is_logged_in and user_info:
