@@ -1,0 +1,54 @@
+{
+    "models": {
+        "DeepSeek-Chat": {
+            "model_name": "deepseek-chat",
+            "base_url": "https://api.deepseek.com/v1/",
+            "api_key": "sk-53403c53779a4f10a5f1da890d655b45"
+        },
+        "Medical_Qwen3_8B": {
+            "model_name": "Medical_Qwen3_8B_Large_Language_Model",
+            "base_url": "http://direct.virtaicloud.com:25595/v1",
+            "api_key": "EMPTY"
+        },
+        "Qwen3-14B": {
+            "model_name": "unsloth/Qwen3-14B-GGUF",
+            "base_url": "https://ms-ens-a77cf680-e8d5.api-inference.modelscope.cn/v1",
+            "api_key": "2fd43260-bee2-44df-998d-7c8b24495b59"
+        },
+        "Hunyuan-lite": {
+            "model_name": "hunyuan-lite",
+            "base_url": "https://api.hunyuan.cloud.tencent.com/v1",
+            "api_key": "sk-zREqirmUwDuCix82vrCyrpJ3k1HPiWvOAojGWE7KyyTMzCiB"
+        },
+        "Doubao-pro-32k": {
+            "model_name": "doubao-pro-32k-241215",
+            "base_url": "https://ark.cn-beijing.volces.com/api/v3",
+            "api_key": "2adb77a8-bd54-4fea-8111-d577e70a40bd"
+        }
+    },
+    "keys": {
+        "LANGCHAIN_API_KEY": "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",
+        "DASHSCOPE_API_KEY": "sk-6bae16d1897d4277a8e389d66c8ae7be"
+    },
+    "database": {
+        "user_db_path": "data/users.db",
+        "chroma_db_path": "data/chroma_data"
+    },
+    "limits": {
+        "guest_daily_limit": 1,
+        "free_daily_limit": 5,
+        "premium_daily_limit": 50,
+        "enterprise_daily_limit": 1000
+    },
+    "pricing": {
+        "monthly": 39.0,
+        "quarterly": 99.0,
+        "yearly": 299.0
+    },
+    "features": {
+        "enable_user_management": true,
+        "enable_usage_tracking": true,
+        "enable_payment_system": true,
+        "session_expire_days": 7
+    }
+}

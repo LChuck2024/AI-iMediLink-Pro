@@ -24,7 +24,6 @@ Thumbs.db
 
 
 # 配置文件中的敏感信息
-config.json
 *.key
 *.pem
 
