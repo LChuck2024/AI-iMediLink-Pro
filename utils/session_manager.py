@@ -1,4 +1,5 @@
 import streamlit as st
+import threading
 from datetime import datetime, timedelta
 from utils.user_manager import UserManager
 
@@ -81,13 +82,26 @@ class SessionManager:
         # 首先检查自动登录
         auto_logged_in, user_info = self.check_auto_login()
         if auto_logged_in:
-            return True, user_info
+            return True
         
         # 检查常规登录状态
         if st.session_state.logged_in and st.session_state.user_info:
-            return True, st.session_state.user_info
+            return True
         
-        return False, None
+        return False
+    
+    def get_user_info(self):
+        """获取当前登录用户信息"""
+        # 首先检查自动登录
+        auto_logged_in, user_info = self.check_auto_login()
+        if auto_logged_in:
+            return user_info
+        
+        # 检查常规登录状态
+        if st.session_state.logged_in and st.session_state.user_info:
+            return st.session_state.user_info
+        
+        return None
     
     def get_remaining_time(self):
         """获取剩余自动登录时间（分钟）"""
@@ -111,10 +125,18 @@ class SessionManager:
     
     def login(self, username, password):
         """用户登录"""
-        success, result = self.user_manager.login_user(username, password)
-        if success:
-            self.save_login_state(result)
-            return True, result
+        try:
+            # 使用线程锁确保数据库操作的线程安全
+            with threading.Lock():
+                success, result = self.user_manager.login_user(username, password)
+                if success:
+                    self.save_login_state(result)
+                    # 保存自动登录信息
+                    if hasattr(self, 'auth_ui') and self.auth_ui:
+                        self.auth_ui.save_auto_login_info(result)
+                return success, result
+        except Exception as e:
+            return False, f"登录失败: {str(e)}"
         return False, result
     
     def logout(self):

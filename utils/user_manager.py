@@ -162,6 +162,9 @@ class UserManager:
                     (username, email, password_hash)
                 )
                 
+                # 提交事务
+                conn.commit()
+                
             return True, "注册成功"
             
         except Exception as e:
@@ -197,6 +200,9 @@ class UserManager:
                         "INSERT INTO sessions (user_id, session_id, expires_at) VALUES (?, ?, ?)",
                         (user_id, session_id, expires_at)
                     )
+                    
+                    # 提交事务
+                    conn.commit()
                     
                     return True, {
                         'user_id': user_id,
@@ -251,6 +257,9 @@ class UserManager:
                     "UPDATE sessions SET is_active = 0 WHERE session_id = ?",
                     (session_id,)
                 )
+                
+                # 提交事务
+                conn.commit()
             
             return True, "登出成功"
             
@@ -398,6 +407,34 @@ class UserManager:
             self.logger.error(f"获取使用趋势失败", {"error": str(e)})
             return []
     
+    def set_user_as_admin(self, username):
+        """将用户设置为管理员"""
+        try:
+            with self.connection_pool.connection() as conn:
+                cursor = conn.cursor()
+                
+                # 检查用户是否存在
+                cursor.execute("SELECT id FROM users WHERE username = ?", (username,))
+                user = cursor.fetchone()
+                
+                if not user:
+                    return False, f"用户 {username} 不存在"
+                
+                # 更新用户类型为admin
+                cursor.execute(
+                    "UPDATE users SET user_type = 'admin' WHERE username = ?",
+                    (username,)
+                )
+                
+                # 提交事务
+                conn.commit()
+                
+                return True, f"用户 {username} 已成功设置为管理员"
+                
+        except Exception as e:
+            self.logger.error(f"设置管理员失败", {"error": str(e)})
+            return False, f"设置管理员失败: {str(e)}"
+    
     def get_department_usage(self):
         """获取科室使用分布"""
         try:
@@ -411,7 +448,7 @@ class UserManager:
                 ORDER BY usage_count DESC
             """)
             
-            result = [{'date': row[0], 'revenue': row[1]} for row in cursor.fetchall()]
+            result = [{'department': row[0], 'usage_count': row[1]} for row in cursor.fetchall()]
             return result
         except Exception as e:
             self.logger.error(f"获取科室使用分布失败", {"error": str(e)})
@@ -609,6 +646,9 @@ class UserManager:
                    VALUES (?, ?, ?, 'completed', ?, ?)""",
                 (user_id, plan_type, amount, start_date, end_date)
             )
+            
+            # 提交事务
+            conn.commit()
             
             return True, "升级成功"
             

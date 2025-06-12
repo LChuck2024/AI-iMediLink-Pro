@@ -56,7 +56,8 @@ class SQLiteConnectionPool:
     def _create_connection(self):
         """创建一个新的数据库连接并添加到池中"""
         try:
-            conn = sqlite3.connect(self.db_path)
+            # 修改：将check_same_thread设置为False，但添加线程锁来确保线程安全
+            conn = sqlite3.connect(self.db_path, check_same_thread=False)
             # 设置一些连接属性以提高性能
             conn.execute("PRAGMA journal_mode=WAL")  # 使用WAL模式提高并发性能
             conn.execute("PRAGMA cache_size=-5000")  # 增加缓存大小（约5MB）

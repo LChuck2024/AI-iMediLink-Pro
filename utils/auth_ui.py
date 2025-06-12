@@ -52,15 +52,26 @@ class AuthUI:
                 with col_guest:
                     guest_clicked = st.form_submit_button("🎭 游客体验", use_container_width=True)
 
+        # 添加调试信息
         if login_clicked:
+            # st.write("登录按钮被点击")
             if username and password:
+                # st.write(f"尝试登录用户: {username}")
                 if self.session_manager:
-                    success, result = self.session_manager.login(username, password)
+                    try:
+                        success, result = self.session_manager.login(username, password)
+                        # st.write(f"登录结果: {success}, {result}")
+                    except Exception as e:
+                        st.error(f"登录过程中发生错误: {str(e)}")
                 else:
-                    success, result = self.user_manager.login_user(username, password)
-                    if success:
-                        st.session_state.logged_in = True
-                        st.session_state.user_info = result
+                    try:
+                        success, result = self.user_manager.login_user(username, password)
+                        st.write(f"直接登录结果: {success}, {result}")
+                        if success:
+                            st.session_state.logged_in = True
+                            st.session_state.user_info = result
+                    except Exception as e:
+                        st.error(f"直接登录过程中发生错误: {str(e)}")
                 
                 if success:
                     st.success("登录成功！")

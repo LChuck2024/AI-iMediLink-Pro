@@ -290,7 +290,8 @@ st.markdown("""
 # 用户认证区域
 with st.container():
     # 检查登录状态
-    is_logged_in, user_info = session_manager.is_logged_in()
+    is_logged_in = session_manager.is_logged_in()
+    user_info = session_manager.get_user_info() if is_logged_in else None
     
     if is_logged_in:
         # 显示用户信息和登出按钮
@@ -298,6 +299,7 @@ with st.container():
         with col1:
             st.success(f"欢迎回来，{user_info['username']}！")
             remaining_time = session_manager.get_remaining_time()
+
             if remaining_time > 0:
                 st.info(f"自动登录剩余时间：{remaining_time} 分钟")
         with col2:

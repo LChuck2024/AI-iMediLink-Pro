@@ -42,7 +42,8 @@ user_manager = UserManager()
 auth_ui = AuthUI(session_manager)
 
 # 检查登录状态
-is_logged_in, user_info = session_manager.is_logged_in()
+is_logged_in = session_manager.is_logged_in()
+user_info = session_manager.get_user_info() if is_logged_in else None
 
 # 游客模式处理
 if not is_logged_in:
@@ -121,7 +122,8 @@ if remaining_time > 0:
     st.info(f"🔄 自动登录剩余时间: {remaining_time} 分钟")
 
 # 显示欢迎信息
-st.success(f"👋 欢迎，{user_info.get('username', '用户')}！")
+if is_logged_in and user_info:
+    st.success(f"👋 欢迎，{user_info.get('username', '用户')}！")
 
 # 侧边栏配置
 with st.sidebar:
@@ -133,48 +135,49 @@ with st.sidebar:
         'enterprise': '🏢 企业用户'
     }
     
-    st.markdown(f"""
-    <div style='text-align: center; padding: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
-                border-radius: 10px; margin-bottom: 1rem; color: white;'>
-        <h2 style='margin: 0; font-size: 1.5rem;'>🤖 AI医疗助手</h2>
-        <p style='margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.9rem;'>专业智能医疗咨询</p>
-        <hr style='margin: 1rem 0; border: none; border-top: 1px solid rgba(255,255,255,0.3);'>
-        <p style='margin: 0; font-size: 0.9rem;'>👤 {user_info['username']}</p>
-        <p style='margin: 0; font-size: 0.8rem; opacity: 0.8;'>{user_type_display.get(user_info['user_type'], '🆓 免费用户')}</p>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    # 检查使用限制（根据用户类型）
-    if user_info['user_type'] == 'guest':
-        # 游客模式使用限制检查
-        can_use, daily_count, limit = user_manager.check_guest_usage_limit(client_ip)
-    else:
-        # 登录用户使用限制检查
-        can_use, daily_count, limit = user_manager.check_usage_limit(
-            user_info['user_id'], user_info['user_type']
-        )
-    
-    # 显示使用情况
-    usage_color = '#28a745' if user_info['user_type'] != 'guest' else '#ffc107'
-    st.markdown(f"""
-    <div style='background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;'>
-        <h4 style='margin: 0 0 0.5rem 0; color: #495057;'>📊 今日使用情况</h4>
-        <p style='margin: 0; font-size: 1.2rem; color: {usage_color};'>{daily_count}/{limit} 次</p>
-        <div style='background: #e9ecef; height: 8px; border-radius: 4px; margin: 0.5rem 0;'>
-            <div style='background: {usage_color}; height: 8px; border-radius: 4px; width: {min(100, (daily_count/limit)*100)}%;'></div>
+    if is_logged_in and user_info:
+        st.markdown(f"""
+        <div style='text-align: center; padding: 1rem; background: linear-gradient(135deg, #667eea 0%, #764ba2 100%); 
+                    border-radius: 10px; margin-bottom: 1rem; color: white;'>
+            <h2 style='margin: 0; font-size: 1.5rem;'>🤖 AI医疗助手</h2>
+            <p style='margin: 0.5rem 0 0 0; opacity: 0.9; font-size: 0.9rem;'>专业智能医疗咨询</p>
+            <hr style='margin: 1rem 0; border: none; border-top: 1px solid rgba(255,255,255,0.3);'>
+            <p style='margin: 0; font-size: 0.9rem;'>👤 {user_info['username']}</p>
+            <p style='margin: 0; font-size: 0.8rem; opacity: 0.8;'>{user_type_display.get(user_info['user_type'], '🆓 免费用户')}</p>
         </div>
-    </div>
-    """, unsafe_allow_html=True)
-    
-    if not can_use:
-        st.error(f"⚠️ 今日咨询次数已用完（{limit}次）")
+        """, unsafe_allow_html=True)
+        
+        # 检查使用限制（根据用户类型）
         if user_info['user_type'] == 'guest':
-            st.info("💡 注册登录后可获得每日5次咨询机会！")
-            if st.button("🚀 立即注册登录"):
-                st.switch_page("首页.py")
+            # 游客模式使用限制检查
+            can_use, daily_count, limit = user_manager.check_guest_usage_limit(client_ip)
         else:
-            if st.button("💎 升级获得更多次数"):
-                st.switch_page("首页.py")
+            # 登录用户使用限制检查
+            can_use, daily_count, limit = user_manager.check_usage_limit(
+                user_info['user_id'], user_info['user_type']
+            )
+        
+        # 显示使用情况
+        usage_color = '#28a745' if user_info['user_type'] != 'guest' else '#ffc107'
+        st.markdown(f"""
+        <div style='background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-bottom: 1rem;'>
+            <h4 style='margin: 0 0 0.5rem 0; color: #495057;'>📊 今日使用情况</h4>
+            <p style='margin: 0; font-size: 1.2rem; color: {usage_color};'>{daily_count}/{limit} 次</p>
+            <div style='background: #e9ecef; height: 8px; border-radius: 4px; margin: 0.5rem 0;'>
+                <div style='background: {usage_color}; height: 8px; border-radius: 4px; width: {min(100, (daily_count/limit)*100)}%;'></div>
+            </div>
+        </div>
+        """, unsafe_allow_html=True)
+        
+        if not can_use:
+            st.error(f"⚠️ 今日咨询次数已用完（{limit}次）")
+            if user_info['user_type'] == 'guest':
+                st.info("💡 注册登录后可获得每日5次咨询机会！")
+                if st.button("🚀 立即注册登录"):
+                    st.switch_page("首页.py")
+            else:
+                if st.button("💎 升级获得更多次数"):
+                    st.switch_page("首页.py")
     
     st.markdown("### 🏥 科室选择")
     dept_options = {
@@ -475,16 +478,20 @@ else:
 # 处理用户输入
 if question := st.chat_input("💬 请详细描述您的症状或医疗问题..."):
     # 检查使用限制
-    can_use, daily_count, limit = user_manager.check_usage_limit(
-        user_info['user_id'], user_info['user_type']
-    )
-    
-    # 修改游客模式逻辑：只有在问第2个问题时才提示登录
-    if not can_use and user_info['user_type'] == 'guest':
-        # 如果是游客且已经达到限制，但是只问了1个问题，仍然允许回答这个问题
-        if daily_count <= 1:
-            # 允许回答这个问题，但会在回答后提示登录
-            can_use = True
+    if is_logged_in and user_info:
+        can_use, daily_count, limit = user_manager.check_usage_limit(
+            user_info['user_id'], user_info['user_type']
+        )
+        
+        # 修改游客模式逻辑：只有在问第2个问题时才提示登录
+        if not can_use and user_info['user_type'] == 'guest':
+            # 如果是游客且已经达到限制，但是只问了1个问题，仍然允许回答这个问题
+            if daily_count <= 1:
+                # 允许回答这个问题，但会在回答后提示登录
+                can_use = True
+    else:
+        # 未登录用户使用游客模式
+        can_use, daily_count, limit = user_manager.check_guest_usage_limit(client_ip)
     
     if not can_use:
         st.error(f"⚠️ 您今日的咨询次数已达上限（{limit}次）。请升级为高级用户获得更多咨询次数！")
@@ -492,15 +499,18 @@ if question := st.chat_input("💬 请详细描述您的症状或医疗问题...
             st.switch_page("首页.py")
     else:
         # 记录使用情况
-        if user_info['user_type'] == 'guest':
+        if is_logged_in and user_info and user_info['user_type'] == 'guest':
             user_manager.record_guest_usage(client_ip, 'consultation', dept)
-        else:
+        elif is_logged_in and user_info:
             user_manager.record_usage(
                 user_info['user_id'], 
                 'consultation', 
                 dept,
                 tokens_used=len(question)  # 简单的token估算
             )
+        else:
+            # 未登录用户记录为游客使用
+            user_manager.record_guest_usage(client_ip, 'consultation', dept)
         
         # 将用户消息添加到聊天记录
         st.session_state.messages.append({"role": "user", "content": question})
@@ -557,7 +567,19 @@ if question := st.chat_input("💬 请详细描述您的症状或医疗问题...
                 print(f"消息处理完成: {question}, 耗时: {duration}秒")
                 
                 # 记录回复的token使用
-                if user_info['user_type'] == 'guest':
+                if is_logged_in and user_info and user_info['user_type'] == 'guest':
+                    user_manager.record_guest_usage(client_ip, 'response', dept)
+                    
+                    # 检查游客使用次数
+                    guest_count = user_manager.get_guest_daily_usage_count(client_ip)
+                    guest_limits = user_manager.get_user_limits()
+                    guest_limit = guest_limits.get('guest', 1)
+                    
+                    if guest_count >= 2:  # consultation + response 已经记录了2次
+                        # 已经使用完所有免费次数，显示更明确的提示
+                        st.warning("💡 这是您今天的最后一次免费咨询。注册登录后可获得每日5次咨询机会！")
+                elif not is_logged_in or user_info is None:
+                    # 未登录用户记录为游客使用
                     user_manager.record_guest_usage(client_ip, 'response', dept)
                     
                     # 检查游客使用次数
@@ -584,7 +606,7 @@ if question := st.chat_input("💬 请详细描述您的症状或医疗问题...
                             # 提供快速登录选项，但不自动展开
                             with st.expander("🚀 快速登录获得更多次数"):
                                 auth_ui.render_auth_interface()
-                else:
+                elif is_logged_in and user_info:
                     user_manager.record_usage(
                         user_info['user_id'], 
                         'response', 
