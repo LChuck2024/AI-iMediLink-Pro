@@ -30,3 +30,4 @@
 2025-06-12 17:55:30 [ERROR] 获取统计数据失败 - Context: {"error": "no such column: status"}
 2025-06-12 18:19:29 [ERROR] 获取统计数据失败 - Context: {"error": "no such column: status"}
 2025-06-12 18:31:37 [ERROR] 获取统计数据失败 - Context: {"error": "no such column: status"}
+2025-06-12 18:33:12 [ERROR] 获取统计数据失败 - Context: {"error": "no such column: status"}
