@@ -1,0 +1,2 @@
+2025-06-15 00:02:13 [ERROR] 记录使用情况失败 - Context: {"error": "database is locked", "user_id": 10, "action_type": "response"}
+2025-06-15 00:05:05 [ERROR] 记录游客使用情况失败 - Context: {"error": "database is locked", "ip_address": "127.0.0.1", "action_type": "consultation"}

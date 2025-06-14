@@ -1,0 +1,2 @@
+2025-06-14 23:41:21 [ERROR] 记录使用情况失败 - Context: {"error": "database is locked", "user_id": 10, "action_type": "response"}
+2025-06-14 23:41:27 [ERROR] 记录使用情况失败 - Context: {"error": "database is locked", "user_id": 10, "action_type": "consultation"}
