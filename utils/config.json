@@ -35,10 +35,10 @@
         "chroma_db_path": "data/chroma_data"
     },
     "limits": {
-        "guest_daily_limit": 1,
-        "free_daily_limit": 5,
-        "premium_daily_limit": 50,
-        "enterprise_daily_limit": 1000
+        "guest_daily_limit": 5,
+        "free_daily_limit": 10,
+        "premium_daily_limit": 100,
+        "enterprise_daily_limit": 10000
     },
     "pricing": {
         "monthly": 39.0,
