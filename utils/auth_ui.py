@@ -357,8 +357,8 @@ class AuthUI:
                 <h2 style='margin-bottom: 1rem; font-size: 2rem;'>🚀 开始您的智能医疗咨询之旅</h2>
                 <p style='font-size: 1.1rem; margin-bottom: 1rem; opacity: 0.9;'>专业AI助手随时为您提供医疗咨询服务，让健康管理更简单</p>
                 <div style='background: rgba(255, 255, 255, 0.2); padding: 1.5rem; border-radius: 10px; margin: 1rem 0;'>
-                    <p style='font-size: 1rem; margin-bottom: 1rem; opacity: 0.9;'>🎭 游客模式：每日1次免费咨询</p>
-                    <p style='font-size: 1rem; margin-bottom: 1rem; opacity: 0.9;'>🔐 注册登录：每日5次咨询机会</p>
+                    <p style='font-size: 1rem; margin-bottom: 1rem; opacity: 0.9;'>🎭 游客模式：每日5次免费咨询</p>
+                    <p style='font-size: 1rem; margin-bottom: 1rem; opacity: 0.9;'>🔐 注册登录：每日10次咨询机会</p>
                     <p style='font-size: 0.9rem; opacity: 0.8;'>登录后您将获得：个性化咨询记录、使用统计、专业建议保存等功能</p>
                 </div>
             </div>
